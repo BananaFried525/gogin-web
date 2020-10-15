@@ -1,0 +1,11 @@
+app:
+    env:  "development"
+    port: 8081
+    debug: true
+database:
+    ip: "127.0.0.1"
+    port: "32769"
+    dbname: "ginmysql"
+    username: "root"
+    password: ""
+    
