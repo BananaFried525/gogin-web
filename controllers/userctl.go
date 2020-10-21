@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/bananafried525/gogin-web/models/request"
+	"github.com/bananafried525/gogin-web/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -49,10 +50,18 @@ func SetUserName(c *gin.Context) {
 		})
 		return
 	} else {
-		user.SetUserName("New User")
+		s := services.CreateUser()
 		c.SecureJSON(200, gin.H{
-			"result": user,
+			"result": s,
 		})
 		return
 	}
+}
+
+func GetUser(c *gin.Context) {
+	s := services.GetUser()
+	c.SecureJSON(200, gin.H{
+		"result": s,
+	})
+	return
 }

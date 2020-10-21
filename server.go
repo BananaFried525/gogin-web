@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bananafried525/gogin-web/config"
-	"github.com/bananafried525/gogin-web/database"
+	database "github.com/bananafried525/gogin-web/databases"
 	"github.com/bananafried525/gogin-web/routes"
 	"github.com/codeskyblue/go-sh"
 	"github.com/gin-gonic/gin"
@@ -29,5 +29,5 @@ func runCmd() {
 }
 
 func connectDb() {
-	database.Db()
+	database.ConnectDb()
 }

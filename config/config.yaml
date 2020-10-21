@@ -3,6 +3,7 @@ app:
     port: 8081
     debug: true
 database:
+    type: "mysql"
     ip: "127.0.0.1"
     port: "32769"
     dbname: "ginmysql"

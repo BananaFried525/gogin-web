@@ -15,5 +15,6 @@ func Routes(route *gin.Engine) {
 		user.GET("/query", controllers.GetUserName)
 		user.GET("/valid", controllers.ValidateUser)
 		user.GET("/set", controllers.SetUserName)
+		user.GET("/get", controllers.GetUser)
 	}
 }
