@@ -4,5 +4,3 @@ vendor
 cmd
 
 # file
-go.mod
-go.sum

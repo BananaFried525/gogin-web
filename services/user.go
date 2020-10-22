@@ -11,8 +11,8 @@ func GetUser() interface{} {
 	return users
 }
 
-func CreateUser() interface{} {
-	user := gormmodels.User{UserName: "test"}
+func CreateUser(newUser gormmodels.User) gormmodels.User {
+	user := newUser
 	databases.Db.Create(&user)
 	return user
 }

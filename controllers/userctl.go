@@ -1,67 +1,28 @@
 package controllers
 
 import (
-	"log"
-	"time"
-
+	"github.com/bananafried525/gogin-web/databases/gormmodels"
 	"github.com/bananafried525/gogin-web/models/request"
+	"github.com/bananafried525/gogin-web/models/response"
 	"github.com/bananafried525/gogin-web/services"
 	"github.com/gin-gonic/gin"
 )
 
-func GetUserName(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	var user request.User
-	if c.ShouldBind(&user) == nil {
-		log.Println(&user)
-	}
-	var newUser map[string]request.User
-	newUser = make(map[string]request.User)
-	newUser["LUL"] = user
-	log.Println(user.IsEmpty())
-	c.SecureJSON(200, gin.H{
-		"result": newUser,
-	})
-	return
-}
+	var invalidString string
+	var res response.ResultResponse
 
-func ValidateUser(c *gin.Context) {
-	var user request.User
-	if err := c.ShouldBind(&user); err != nil {
-		c.SecureJSON(403, gin.H{
-			"result": "",
-			"msg":    "Missing or invalid",
-		})
-		return
-	} else {
-		time.Sleep(time.Second)
-		c.SecureJSON(200, gin.H{
-			"result": user,
-		})
+	if err := c.ShouldBindJSON(&user); err != nil {
+		invalidString = "Missing or invalid"
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "40300"}
+		c.JSON(403, res.FmtResponse())
 		return
 	}
-}
+	var newUser gormmodels.User
+	newUser.UserName = user.UserName
+	newUser = services.CreateUser(newUser)
+	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000", ResultData: newUser}
+	c.JSON(200, res.FmtResponse())
 
-func SetUserName(c *gin.Context) {
-	var user request.User
-	if err := c.ShouldBind(&user); err != nil {
-		c.SecureJSON(403, gin.H{
-			"result": "",
-			"msg":    "Missing or invalid",
-		})
-		return
-	} else {
-		s := services.CreateUser()
-		c.SecureJSON(200, gin.H{
-			"result": s,
-		})
-		return
-	}
-}
-
-func GetUser(c *gin.Context) {
-	s := services.GetUser()
-	c.SecureJSON(200, gin.H{
-		"result": s,
-	})
-	return
 }
