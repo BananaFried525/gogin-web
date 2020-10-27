@@ -5,21 +5,21 @@ import (
 	"log"
 
 	"github.com/bananafried525/gogin-web/config"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var Db *gorm.DB
+var psqlDb *gorm.DB
 
-func ConnectDb() {
+func ConnectPsqlDb() {
 	var err error
-	dns := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dns := fmt.Sprintf("user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai ",
 		config.GetConfig("database.username"),
 		config.GetConfig("database.ip"),
 		config.GetConfig("database.port"),
 		config.GetConfig("database.dbname"),
 	)
-	Db, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
+	Db, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Connection Err: %v", err)
 	}
@@ -30,8 +30,4 @@ func ConnectDb() {
 
 	// SetMaxOpenConns sets the maximum number of open connections to the database.
 	sqlDB.SetMaxOpenConns(100)
-}
-
-func conpost() {
-
 }
