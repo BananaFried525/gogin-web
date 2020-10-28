@@ -9,4 +9,9 @@ database:
     dbname: "ginmysql"
     username: "root"
     password: ""
-    
+    psql:
+        ip: "127.0.0.1"
+        port: "32771"
+        dbname: "inLearning"
+        username: "postgres"
+        password: "@min"

@@ -20,7 +20,7 @@ require (
 	github.com/nightlyone/lockfile v1.0.0 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect; indirectgo
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/robfig/cron/v3 v3.0.1
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/sdboyer/constext v0.0.0-20170321163424-836a14457353 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/tools/godep v0.0.0-20180126220526-ce0bfadeb516 // indirect
@@ -29,6 +29,6 @@ require (
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gorm.io/driver/mysql v1.0.2
-	gorm.io/driver/postgres v1.0.5
+	gorm.io/driver/postgres v1.0.4
 	gorm.io/gorm v1.20.4
 )

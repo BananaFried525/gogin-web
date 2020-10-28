@@ -3,34 +3,32 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/bananafried525/gogin-web/config"
 	"github.com/bananafried525/gogin-web/databases"
-	"github.com/bananafried525/gogin-web/routes"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"github.com/robfig/cron/v3"
 )
 
 func main() {
-
+	start := time.Now()
 	heyJwt()
-
 	// start web
-	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
+	// r := gin.New()
+	// r.Use(gin.Logger())
+	// r.Use(gin.Recovery())
 
-	connectDb()
-	c := cron.New()
-	c.AddFunc("@every 0h15m", logEvery5sec)
-	c.Start()
+	// connectDb()
+	// c := cron.New()
+	// c.AddFunc("@every 0h15m", logEvery5sec)
+	// c.Start()
 
-	routes.Routes(r)
-	r.NoRoute(func(c *gin.Context) {
-		c.JSON(404, gin.H{"result": "PAGE_NOT_FOUND", "msg": "Page not found"})
-	})
-	r.Run(fmt.Sprintf(": %v", config.GetConfig("app.port")))
+	databases.ConnectPsqlDb()
+	// routes.Routes(r)
+	// r.NoRoute(func(c *gin.Context) {
+	// 	c.JSON(404, gin.H{"result": "PAGE_NOT_FOUND", "msg": "Page not found"})
+	// })
+	// r.Run(fmt.Sprintf(": %v", config.GetConfig("app.port")))
+	log.Println(time.Since(start))
 }
 
 func connectDb() {
