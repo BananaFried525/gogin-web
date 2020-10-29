@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var psqlDb *gorm.DB
-
 func ConnectPsqlDb() {
 	var err error
 	// sslmode=disable TimeZone=Asia/Shanghai
@@ -21,26 +19,34 @@ func ConnectPsqlDb() {
 		config.GetConfig("database.psql.dbname"),
 		config.GetConfig("database.psql.port"),
 	)
-	psqlDb, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Connection Err: %v", err)
 	}
-	sqlDB, err := psqlDb.DB()
 
-	if !psqlDb.Migrator().HasTable(&gormmodels.User{}) {
-		psqlDb.Migrator().CreateTable(&gormmodels.User{})
-		log.Println("Created table 'users'")
+	if !DB.Migrator().HasTable(&gormmodels.User{}) || !DB.Migrator().HasTable(&gormmodels.Role{}) {
+		DB.Migrator().CreateTable(&gormmodels.Role{})
+		DB.Migrator().CreateTable(&gormmodels.User{})
+		log.Println("Created table")
 	} else {
-		psqlDb.Migrator().DropTable(&gormmodels.User{})
-		psqlDb.Migrator().CreateTable(&gormmodels.User{})
+		DB.Migrator().DropTable(&gormmodels.Role{})
+		DB.Migrator().DropTable(&gormmodels.User{})
+		log.Println("Deleted")
+		DB.Migrator().CreateTable(&gormmodels.Role{})
+		DB.Migrator().CreateTable(&gormmodels.User{})
+		log.Println("Created table")
+		DB.Create(&gormmodels.Role{ID: 1, Role: "ADMIN"})
+		DB.Create(&gormmodels.Role{ID: 2, Role: "GUEST"})
 	}
+
+	db, err := DB.DB()
 	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
-	sqlDB.SetMaxIdleConns(10)
+	db.SetMaxIdleConns(10)
 
 	// SetMaxOpenConns sets the maximum number of open connections to the database.
-	sqlDB.SetMaxOpenConns(100)
-	defer sqlDB.Close()
-	if err := sqlDB.Ping(); err != nil {
+	db.SetMaxOpenConns(100)
+
+	if err := db.Ping(); err != nil {
 		log.Fatalln(err)
 		return
 	} else {

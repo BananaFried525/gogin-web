@@ -12,6 +12,8 @@ func Routes(route *gin.Engine) {
 	}
 	user := route.Group("/user")
 	{
-		user.POST("/createUser", controllers.CreateUser)
+		user.POST("/createuser", controllers.CreateUser)
+		user.GET("/getusers", controllers.FindUser)
+		// user.GET("/getuser")
 	}
 }

@@ -1,18 +1,24 @@
 package services
 
 import (
+	"log"
+
 	"github.com/bananafried525/gogin-web/databases"
 	"github.com/bananafried525/gogin-web/databases/gormmodels"
 )
 
-func GetUser() interface{} {
+func GetUser(id string) []gormmodels.User {
 	var users []gormmodels.User
-	databases.Db.Find(&users)
+	err := databases.DB.Preload("Role").Find(&users, id).Error
+	if err != nil {
+		log.Println(err)
+	}
+
 	return users
 }
 
 func CreateUser(newUser gormmodels.User) gormmodels.User {
 	user := newUser
-	databases.Db.Create(&user)
+	databases.DB.Create(&user)
 	return user
 }

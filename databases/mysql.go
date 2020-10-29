@@ -9,9 +9,9 @@ import (
 	"gorm.io/gorm"
 )
 
-var Db *gorm.DB
+// var Db *gorm.DB
 
-func ConnectDb() {
+func ConnectMySqlDb() {
 	var err error
 	dns := fmt.Sprintf("%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.GetConfig("database.username"),
@@ -19,19 +19,22 @@ func ConnectDb() {
 		config.GetConfig("database.port"),
 		config.GetConfig("database.dbname"),
 	)
-	Db, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(dns), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Connection Err: %v", err)
 	}
-	sqlDB, err := Db.DB()
+	db, err := DB.DB()
 
 	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
-	sqlDB.SetMaxIdleConns(10)
+	db.SetMaxIdleConns(10)
 
 	// SetMaxOpenConns sets the maximum number of open connections to the database.
-	sqlDB.SetMaxOpenConns(100)
-}
+	db.SetMaxOpenConns(100)
 
-func conpost() {
-
+	if err := db.Ping(); err != nil {
+		log.Fatalln(err)
+		return
+	} else {
+		log.Println("Hello Postgres")
+	}
 }
