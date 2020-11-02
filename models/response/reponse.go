@@ -12,3 +12,8 @@ func (r ResultResponse) FmtResponse() ResultResponse {
 	}
 	return r
 }
+
+func (r *ResultResponse) CreateSuccess() {
+	// resSuc := map[string]string{""}
+	r.ResultData = "Create Success"
+}

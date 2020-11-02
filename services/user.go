@@ -17,8 +17,8 @@ func GetUser(id string) []gormmodels.User {
 	return users
 }
 
-func CreateUser(newUser gormmodels.User) gormmodels.User {
+func CreateUser(newUser gormmodels.User) (gormmodels.User, error) {
 	user := newUser
-	databases.DB.Create(&user)
-	return user
+	err := databases.DB.Create(&user).Error
+	return user, err
 }

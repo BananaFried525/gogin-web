@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"log"
+	"strings"
 
 	"github.com/bananafried525/gogin-web/databases/gormmodels"
 	"github.com/bananafried525/gogin-web/models/request"
@@ -14,6 +15,7 @@ import (
 func CreateUser(c *gin.Context) {
 	var user request.User
 	var invalidString string
+	var err error
 	var res response.ResultResponse
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -24,11 +26,17 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	user.Password, err = utils.HashPassword(user.Password)
+	if err != nil {
+		log.Println(err.Error())
+		invalidString = "Missing or invalid"
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "40300"}
+		c.JSON(403, res.FmtResponse())
+		return
+	}
+
 	var newUser gormmodels.User
-	newUser.UserName = user.UserName
-	newUser.Email = user.Email
-	newUser.Password = user.Password
-	newUser.RoleID = 2
+	newUser.NewGuest(user, 0)
 
 	if !utils.IsEmail(newUser.Email) {
 		invalidString = "Missing or invalid"
@@ -37,9 +45,17 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	newUser = services.CreateUser(newUser)
-	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000", ResultData: newUser}
-	c.JSON(200, res.FmtResponse())
+	newUser, err = services.CreateUser(newUser)
+	if err != nil {
+		invalidString = "Error Database"
+		log.Print(strings.Contains(err.Error(), "23505"))
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "50000", ResultData: err.Error()}
+		c.JSON(500, res.FmtResponse())
+		return
+	}
+
+	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20100", ResultData: "Create Success"}
+	c.JSON(201, res.FmtResponse())
 
 }
 
@@ -48,8 +64,8 @@ func FindUser(c *gin.Context) {
 	var invalidString string
 
 	query := c.Request.URL.Query()
-	userId := query.Get("userId")
-	newUser := services.GetUser(userId)
+	userID := query.Get("userId")
+	newUser := services.GetUser(userID)
 
 	if len(newUser) == 0 {
 		invalidString = "Data Notfound"
@@ -57,6 +73,13 @@ func FindUser(c *gin.Context) {
 		c.JSON(404, res.FmtResponse())
 		return
 	}
-	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000", ResultData: newUser}
+
+	var userRes []response.UserResponse
+	for _, user := range newUser {
+		u := response.UserResponse{}
+		u.New(user)
+		userRes = append(userRes, u)
+	}
+	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000", ResultData: userRes}
 	c.JSON(200, res.FmtResponse())
 }

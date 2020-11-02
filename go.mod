@@ -24,6 +24,7 @@ require (
 	github.com/sdboyer/constext v0.0.0-20170321163424-836a14457353 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/tools/godep v0.0.0-20180126220526-ce0bfadeb516 // indirect
+	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	golang.org/x/sync v0.0.0-20201008141435-b3e1573b7520 // indirect
 	golang.org/x/sys v0.0.0-20201018230417-eeed37f84f13 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
