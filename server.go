@@ -78,5 +78,7 @@ func heyJwt() {
 		fmt.Println(claims["dd"], claims["dasd"])
 	} else {
 		fmt.Println(err)
-	}
+	} 
+
+	// log.Print( " ")
 }
