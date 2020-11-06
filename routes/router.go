@@ -14,6 +14,6 @@ func Routes(route *gin.Engine) {
 	{
 		user.POST("/createuser", controllers.CreateUser)
 		user.GET("/getusers", controllers.FindUser)
-		// user.GET("/getuser")
+		user.DELETE("/deleteusser", controllers.DeleteUser)
 	}
 }

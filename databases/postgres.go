@@ -12,8 +12,8 @@ import (
 
 func ConnectPsqlDb() {
 	var err error
-	// sslmode=disable TimeZone=Asia/Shanghai
-	dns := fmt.Sprintf("user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=asia/bangkok",
+	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=asia/bangkok",
+		config.GetConfig("database.psql.ip"),
 		config.GetConfig("database.psql.username"),
 		config.GetConfig("database.psql.password"),
 		config.GetConfig("database.psql.dbname"),
@@ -21,22 +21,7 @@ func ConnectPsqlDb() {
 	)
 	DB, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Connection Err: %v", err)
-	}
-
-	if !DB.Migrator().HasTable(&gormmodels.User{}) || !DB.Migrator().HasTable(&gormmodels.Role{}) {
-		DB.Migrator().CreateTable(&gormmodels.Role{})
-		DB.Migrator().CreateTable(&gormmodels.User{})
-		log.Println("Created table")
-	} else {
-		DB.Migrator().DropTable(&gormmodels.Role{})
-		DB.Migrator().DropTable(&gormmodels.User{})
-		log.Println("Deleted")
-		DB.Migrator().CreateTable(&gormmodels.Role{})
-		DB.Migrator().CreateTable(&gormmodels.User{})
-		log.Println("Created table")
-		DB.Create(&gormmodels.Role{ID: 1, Role: "ADMIN"})
-		DB.Create(&gormmodels.Role{ID: 2, Role: "GUEST"})
+		log.Printf("Connection Err: %v", err)
 	}
 
 	db, err := DB.DB()
@@ -47,9 +32,23 @@ func ConnectPsqlDb() {
 	db.SetMaxOpenConns(100)
 
 	if err := db.Ping(); err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 		return
 	} else {
 		log.Println("Hello Postgres")
+		if !DB.Migrator().HasTable(&gormmodels.User{}) || !DB.Migrator().HasTable(&gormmodels.Role{}) {
+			DB.Migrator().CreateTable(&gormmodels.Role{})
+			DB.Migrator().CreateTable(&gormmodels.User{})
+			log.Println("Created table")
+		} else {
+			DB.Migrator().DropTable(&gormmodels.Role{})
+			DB.Migrator().DropTable(&gormmodels.User{})
+			log.Println("Deleted")
+			DB.Migrator().CreateTable(&gormmodels.Role{})
+			DB.Migrator().CreateTable(&gormmodels.User{})
+			log.Println("Created table")
+			DB.Create(&gormmodels.Role{ID: 1, Role: "ADMIN"})
+			DB.Create(&gormmodels.Role{ID: 2, Role: "GUEST"})
+		}
 	}
 }

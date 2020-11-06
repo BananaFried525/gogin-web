@@ -22,3 +22,8 @@ func CreateUser(newUser gormmodels.User) (gormmodels.User, error) {
 	err := databases.DB.Create(&user).Error
 	return user, err
 }
+
+func DeleteUser(user *gormmodels.User) error {
+	err := databases.DB.Delete(&user).Error
+	return err
+}

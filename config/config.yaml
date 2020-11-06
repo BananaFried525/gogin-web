@@ -11,7 +11,7 @@ database:
     password: ""
     psql:
         ip: "127.0.0.1"
-        port: "32771"
-        dbname: "inLearning"
+        port: "32772"
+        dbname: "goGin"
         username: "postgres"
         password: "@min"

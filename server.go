@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/bananafried525/gogin-web/config"
 	"github.com/bananafried525/gogin-web/databases"
@@ -14,9 +13,6 @@ import (
 )
 
 func main() {
-	start := time.Now()
-	heyJwt()
-	/*start web*/
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -30,8 +26,7 @@ func main() {
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"result": "PAGE_NOT_FOUND", "msg": "Page not found"})
 	})
-	r.Run(fmt.Sprintf(": %v", config.GetConfig("app.port")))
-	log.Println(time.Since(start))
+	r.Run(fmt.Sprintf(":%v", config.GetConfig("app.port")))
 }
 
 func connectDb() {
@@ -78,7 +73,5 @@ func heyJwt() {
 		fmt.Println(claims["dd"], claims["dasd"])
 	} else {
 		fmt.Println(err)
-	} 
-
-	// log.Print( " ")
+	}
 }

@@ -48,15 +48,21 @@ func CreateUser(c *gin.Context) {
 	newUser, err = services.CreateUser(newUser)
 	if err != nil {
 		invalidString = "Error Database"
-		log.Print(strings.Contains(err.Error(), "23505"))
-		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "50000", ResultData: err.Error()}
-		c.JSON(500, res.FmtResponse())
-		return
+		if strings.Contains(err.Error(), "23505") {
+			res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "50000", ResultData: "duplicate key"}
+			c.JSON(500, res.FmtResponse())
+			return
+		} else {
+			res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "50000", ResultData: err.Error()}
+			c.JSON(500, res.FmtResponse())
+			return
+		}
+
 	}
 
 	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20100", ResultData: "Create Success"}
 	c.JSON(201, res.FmtResponse())
-
+	return
 }
 
 func FindUser(c *gin.Context) {
@@ -82,4 +88,38 @@ func FindUser(c *gin.Context) {
 	}
 	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000", ResultData: userRes}
 	c.JSON(200, res.FmtResponse())
+}
+
+func DeleteUser(c *gin.Context) {
+	var res response.ResultResponse
+	var invalidString string
+
+	query := c.Request.URL.Query()
+	userID := query.Get("userId")
+
+	if userID == "" {
+		invalidString = "Missing or invalid"
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "40300"}
+		c.JSON(403, res.FmtResponse())
+		return
+	}
+
+	findUser := services.GetUser(userID)
+	if len(findUser) == 0 {
+		invalidString = "Data Notfound"
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "40401"}
+		c.JSON(404, res.FmtResponse())
+		return
+	}
+
+	log.Println(&findUser)
+	err := services.DeleteUser(&findUser[0])
+	if err != nil {
+		res = response.ResultResponse{ReponseMessage: invalidString, ResponseCode: "50000", ResultData: err.Error()}
+		c.JSON(500, res.FmtResponse())
+		return
+	}
+	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000"}
+	c.JSON(200, res.FmtResponse())
+
 }
