@@ -20,3 +20,7 @@ func GetConfig(key string) interface{} {
 	}
 	return viper.Get(key)
 }
+
+func GetPort() interface{} {
+	return GetConfig("app.port")
+}

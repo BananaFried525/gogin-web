@@ -3,12 +3,12 @@ app:
     port: 8081
     debug: true
 database:
-    type: "mysql"
-    ip: "127.0.0.1"
-    port: "32769"
-    dbname: "ginmysql"
-    username: "root"
-    password: ""
+    mysql:
+        ip: "127.0.0.1"
+        port: "32769"
+        dbname: "ginmysql"
+        username: "root"
+        password: ""
     psql:
         ip: "127.0.0.1"
         port: "32772"

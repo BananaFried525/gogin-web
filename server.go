@@ -26,7 +26,7 @@ func main() {
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"result": "PAGE_NOT_FOUND", "msg": "Page not found"})
 	})
-	r.Run(fmt.Sprintf(":%v", config.GetConfig("app.port")))
+	r.Run(fmt.Sprintf(":%v", config.GetPort()))
 }
 
 func connectDb() {
