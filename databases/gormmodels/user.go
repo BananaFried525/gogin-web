@@ -21,6 +21,7 @@ func (u *User) NewGuest(userReq request.User, roleID int) {
 		u.RoleID = 2
 	}
 }
+
 func NewUser() *User {
 	return &User{}
 }
