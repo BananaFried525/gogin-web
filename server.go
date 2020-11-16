@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/bananafried525/gogin-web/config"
 	"github.com/bananafried525/gogin-web/databases"
@@ -13,6 +14,14 @@ import (
 )
 
 func main() {
+	env := os.Getenv("NODE_ENV")
+	var port interface{}
+	if env == "docker" {
+		port = os.Getenv("PORT")
+	} else {
+		port = config.GetPort()
+	}
+	log.Println(os.Getenv("test"))
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -26,7 +35,7 @@ func main() {
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"result": "PAGE_NOT_FOUND", "msg": "Page not found"})
 	})
-	r.Run(fmt.Sprintf(":%v", config.GetPort()))
+	r.Run(fmt.Sprintf(":%v", port))
 }
 
 func connectDb() {
