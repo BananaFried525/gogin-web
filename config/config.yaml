@@ -10,8 +10,12 @@ database:
         username: "root"
         password: ""
     psql:
-        ip: "127.0.0.1"
-        port: "32772"
+        # HOST PORT LOCAL
+        # ip: "127.0.0.1"
+        # port: "9999"
+        # HOST PORT DOCKER_COMPOSE
+        ip: "postgres"
+        port: "5432"
         dbname: "goGin"
         username: "postgres"
-        password: "@min"
+        password: "admin"

@@ -12,7 +12,7 @@ import (
 
 func ConnectPsqlDb() {
 	var err error
-	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=asia/bangkok",
+	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
 		config.GetConfig("database.psql.ip"),
 		config.GetConfig("database.psql.username"),
 		config.GetConfig("database.psql.password"),

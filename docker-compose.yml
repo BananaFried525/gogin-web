@@ -1,0 +1,18 @@
+version: '3.6'
+services: 
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: goGin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 9999:5432
+  api:
+    image: gogin-web:v.1.0.1
+    ports:
+      - 8888:8081
+    depends_on:
+      - postgres
+    links:
+      - postgres
