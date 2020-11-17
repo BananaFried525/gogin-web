@@ -38,6 +38,7 @@ func Test(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
+	log.Println(c.Get("G"))
 	var user request.User
 	var invalidString string
 	// var err error
@@ -54,15 +55,15 @@ func Login(c *gin.Context) {
 	auth.UserName = user.UserName
 	auth.Password = user.Password
 	if services.Login(&auth) {
-		res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20100", ResultData: auth}
+		res = response.ResultResponse{ReponseMessage: "login success", ResponseCode: "20000"}
 		authJWT := services.EncodeJwt(auth)
 		log.Println(authJWT)
-		c.Header("ath", authJWT)
+		c.Header("auth", authJWT)
 		c.JSON(201, res.FmtResponse())
 		return
 	} else {
-		res = response.ResultResponse{ReponseMessage: "", ResponseCode: "40000"}
-		c.JSON(400, res.FmtResponse())
+		res = response.ResultResponse{ReponseMessage: "", ResponseCode: "40100"}
+		c.JSON(401, res.FmtResponse())
 		return
 	}
 

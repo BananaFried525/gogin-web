@@ -25,6 +25,8 @@ func Routes(route *gin.Engine) {
 func middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log.Println("")
+		c.Set("G", "123")
+		c.Next()
 	}
 
 }
