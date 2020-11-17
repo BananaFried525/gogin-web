@@ -121,5 +121,4 @@ func DeleteUser(c *gin.Context) {
 	}
 	res = response.ResultResponse{ReponseMessage: "", ResponseCode: "20000"}
 	c.JSON(200, res.FmtResponse())
-
 }

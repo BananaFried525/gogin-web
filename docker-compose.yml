@@ -6,6 +6,8 @@ services:
       POSTGRES_DB: goGin
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
+    volumes: 
+      - /d/docker-mount/docker-compose:/var/lib/postgresql
     ports:
       - 9999:5432
   api:
