@@ -27,9 +27,3 @@ func DeleteUser(user *gormmodels.User) error {
 	err := databases.DB.Delete(&user).Error
 	return err
 }
-
-func FindUser(user *gormmodels.User) error {
-	// var euser gormmodels.User
-	err := databases.DB.Preload("Role").Where("user_name = ? and user_email = ?", user.UserName, user.Email).Find(&user).Error
-	return err
-}

@@ -50,8 +50,10 @@ func logEvery5sec() {
 	err = sqlDB.Ping()
 	if err != nil {
 		log.Println(err)
+		sqlDB.Close()
+		databases.ConnectDb()
 	} else {
-		log.Println("health")
+		log.Println("db connected")
 	}
 }
 

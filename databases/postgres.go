@@ -7,6 +7,7 @@ import (
 
 	"github.com/bananafried525/gogin-web/config"
 	"github.com/bananafried525/gogin-web/databases/gormmodels"
+	"github.com/bananafried525/gogin-web/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,9 +23,7 @@ func ConnectPsqlDb() {
 	var err error
 	getDbEnvironment()
 	DB, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
-	if err != nil {
-		log.Printf("Connection Err: %v", err)
-	}
+	utils.HandleError(err)
 
 	db, err := DB.DB()
 	db.SetMaxIdleConns(10)
@@ -33,11 +32,13 @@ func ConnectPsqlDb() {
 	if err := db.Ping(); err != nil {
 		log.Println(err)
 	} else {
-		log.Println("Hello Postgres")
-		if !DB.Migrator().HasTable(&gormmodels.User{}) || !DB.Migrator().HasTable(&gormmodels.Role{}) {
-			DB.Migrator().CreateTable(&gormmodels.Role{})
+		log.Println(utils.ConnectPg)
+		if !DB.Migrator().HasTable(&gormmodels.User{}) {
 			DB.Migrator().CreateTable(&gormmodels.User{})
 			log.Println("Created table")
+
+		} else if !DB.Migrator().HasTable(&gormmodels.Role{}) {
+			DB.Migrator().CreateTable(&gormmodels.Role{})
 			DB.Create(&gormmodels.Role{ID: 1, Role: "ADMIN"})
 			DB.Create(&gormmodels.Role{ID: 2, Role: "GUEST"})
 		}
