@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 func IsEmail(email string) bool {
@@ -12,6 +14,16 @@ func IsEmail(email string) bool {
 
 func IsNumber(number string) bool {
 	if _, err := strconv.Atoi(number); err != nil {
+		return false
+	}
+	return true
+}
+
+func CheckJwtExpire(exp interface{}) bool {
+	strExp := fmt.Sprintf("%v", exp)
+	expire, _ := time.Parse(time.RFC3339, strExp)
+	diff := expire.Sub(time.Now())
+	if diff <= 0 {
 		return false
 	}
 	return true

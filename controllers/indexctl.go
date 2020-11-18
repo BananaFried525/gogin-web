@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -18,7 +19,8 @@ func RequestJsonHolder(c *gin.Context) {
 }
 
 func Test(c *gin.Context) {
-	c.JSON(200, "")
+	add := time.Now().Local().Add(time.Hour)
+	c.JSON(200, add.String())
 	return
 }
 
